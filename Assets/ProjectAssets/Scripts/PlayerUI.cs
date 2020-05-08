@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerUI : MonoBehaviour {
     CharacterStats playerStats;
-    CharacterActions playerActions;
+    CharacterCombat playerCombat;
 
     Slider playerHealthBar;
     Slider targetHealthBar;
@@ -13,7 +13,7 @@ public class PlayerUI : MonoBehaviour {
 
     void Awake() {
         playerStats = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterStats>();
-        playerActions = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterActions>();
+        playerCombat = GameObject.FindGameObjectWithTag("Player").GetComponent<CharacterCombat>();
 
         playerHealthBar = GameObject.Find("PlayerHealthBar").GetComponent<Slider>();
         targetHealthBar = GameObject.Find("TargetHealthBar").GetComponent<Slider>();
@@ -22,9 +22,9 @@ public class PlayerUI : MonoBehaviour {
     void Update() {
         playerHealthBar.maxValue = playerStats.maxHealth;
         playerHealthBar.value = playerStats.currentHealth;
-        if (playerActions.currentTarget != null) {
-            targetHealthBar.maxValue = playerActions.currentTarget.GetComponent<CharacterStats>().maxHealth;
-            targetHealthBar.value = playerActions.currentTarget.GetComponent<CharacterStats>().currentHealth;
+        if (playerCombat.currentTarget != null) {
+            targetHealthBar.maxValue = playerCombat.currentTarget.GetComponent<CharacterStats>().maxHealth;
+            targetHealthBar.value = playerCombat.currentTarget.GetComponent<CharacterStats>().currentHealth;
         }
     }
 }

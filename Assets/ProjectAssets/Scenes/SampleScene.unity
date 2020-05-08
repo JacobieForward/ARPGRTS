@@ -212,7 +212,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &196200394
 BoxCollider:
@@ -452,7 +452,7 @@ NavMeshAgent:
   m_GameObject: {fileID: 572033819}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.5
+  m_Radius: 0.1
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
@@ -477,7 +477,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a7714784aabe8114eb91caf07a5bc7a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentTarget: {fileID: 0}
   outlineMaterial: {fileID: 2100000, guid: ca45056559ca2e14eb486b296f75b407, type: 2}
 --- !u!114 &572033823
 MonoBehaviour:
@@ -640,7 +639,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &888208924
 BoxCollider:
@@ -1211,7 +1210,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!64 &1306746792
 MeshCollider:
@@ -1475,7 +1474,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc0aa257dd6c52445acaceda0cc8652d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  searchRadius: 4
+  searchRadius: 15
 --- !u!136 &1706749107
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -1687,7 +1686,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!4 &2122214080
 Transform:
@@ -1724,7 +1723,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 1
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!65 &2146801188
 BoxCollider:

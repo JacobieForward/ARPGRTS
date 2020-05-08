@@ -2,16 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(CharacterActions))]
+[RequireComponent(typeof(CharacterCombat))]
 public class PlayerCombat : MonoBehaviour {
-    CharacterActions characterActions;
-
-    public GameObject currentTarget;
+    CharacterCombat characterCombat;
 
     public Material outlineMaterial;
 
     void Awake() {
-        characterActions = GetComponent<CharacterActions>();
+        characterCombat = GetComponent<CharacterCombat>();
     }
 
     void Update() {
@@ -27,7 +25,7 @@ public class PlayerCombat : MonoBehaviour {
             if (Physics.Raycast(ray, out hitInfo, 100)) {
                 if (hitInfo.collider.gameObject.tag.Equals("Enemy")) {
                     SelectTarget(hitInfo.collider.gameObject);
-                    characterActions.Attack();
+                    characterCombat.Attack();
                 }
             }
         }
@@ -35,11 +33,11 @@ public class PlayerCombat : MonoBehaviour {
 
     void SelectTarget(GameObject selectedObject) {
         selectedObject.GetComponent<Outliner>().AddOutline();
-        characterActions.currentTarget = selectedObject;
+        characterCombat.currentTarget = selectedObject;
     }
 
     void DeSelectTarget() {
-        characterActions.currentTarget.GetComponent<Outliner>().RemoveOutline();
-        characterActions.currentTarget = null;
+        characterCombat.currentTarget.GetComponent<Outliner>().RemoveOutline();
+        characterCombat.currentTarget = null;
     }
 }

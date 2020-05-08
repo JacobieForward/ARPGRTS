@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(CharacterActions))]
+[RequireComponent(typeof(CharacterCombat))]
 public class EnemyCombat : MonoBehaviour {
-    CharacterActions characterActions;
+    CharacterCombat characterCombat;
     CharacterStats characterStats;
+    //TODO: Some sort of state machine in a separate script. Possibly in to the future to tie in to another script for a group of enemies to have intelligence and make tactical decisions.
 
     public float searchRadius;
 
     void Awake() {
-        characterActions = GetComponent<CharacterActions>();
+        characterCombat = GetComponent<CharacterCombat>();
         characterStats = GetComponent<CharacterStats>();
     }
 
     void Update() {
-        // TODO: Very messy conditionals, clean up later
-        if (characterActions.currentTarget == null) {
+        if (characterCombat.currentTarget == null) {
             SearchForTarget();
-        } else {
-            characterActions.Attack();
+        } else if (characterCombat.approachingTarget == false) {
+            characterCombat.Attack();
         }
     }
 
@@ -28,7 +28,7 @@ public class EnemyCombat : MonoBehaviour {
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, searchRadius);
         foreach (Collider collider in hitColliders) {
             if (collider.gameObject.tag.Equals("Player")) {
-                characterActions.currentTarget = collider.gameObject;
+                characterCombat.Attack(collider.gameObject);
             }
         }
     }
