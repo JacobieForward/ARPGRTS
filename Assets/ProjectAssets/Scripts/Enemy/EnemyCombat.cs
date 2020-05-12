@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(CharacterCombat))]
+[RequireComponent(typeof(CharacterStats))]
+[RequireComponent(typeof(Outliner))] // Required for PlayerInput to outline this object if it is selected as a target
 public class EnemyCombat : MonoBehaviour {
     CharacterCombat characterCombat;
     CharacterStats characterStats;

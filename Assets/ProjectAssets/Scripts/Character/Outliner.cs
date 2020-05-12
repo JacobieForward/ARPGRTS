@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Outliner : MonoBehaviour {
-    public Renderer renderer;
+    public Renderer renderer; // TODO: Figure out a way to set this at runtime rather than in the editor, also get rid of the annoying warning
     public Material outlineMaterial;
 
     public void AddOutline() {

@@ -4,10 +4,10 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(CharacterStats))]
-[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(CharacterMovement))]
 public class CharacterCombat : MonoBehaviour {
     CharacterStats characterStats;
-    NavMeshAgent navMeshAgent;
+    CharacterMovement characterMovement;
 
     float attackTimer;
 
@@ -17,7 +17,7 @@ public class CharacterCombat : MonoBehaviour {
 
     void Awake() {
         characterStats = GetComponent<CharacterStats>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
+        characterMovement = GetComponent<CharacterMovement>();
 
         attackTimer = characterStats.attackSpeed;
         approachingTarget = false;
@@ -27,12 +27,11 @@ public class CharacterCombat : MonoBehaviour {
         CheckForDeath();
         attackTimer += Time.deltaTime;
         if (approachingTarget) {
-            navMeshAgent.destination = currentTarget.transform.position;
-            TurnToTarget();
+            characterMovement.MoveToPosition(currentTarget.transform.position);
+            characterMovement.TurnToPosition(currentTarget.transform.position);
             if (WithinAttackRangeOfTarget() && FacingTarget()) {
                 approachingTarget = false;
-                navMeshAgent.velocity = Vector3.zero;
-                navMeshAgent.SetDestination(gameObject.transform.position); // Setting destination to current position stops movement immediately
+                characterMovement.StopMovement();
                 Attack();
             }
         }
@@ -81,10 +80,6 @@ public class CharacterCombat : MonoBehaviour {
         }
     }
 
-    void MoveToTarget() {
-        navMeshAgent.SetDestination(currentTarget.transform.position);
-    }
-
     bool WithinAttackRangeOfTarget() {
         float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
 
@@ -110,14 +105,5 @@ public class CharacterCombat : MonoBehaviour {
             return true;
         }
         return false;
-    }
-
-    void TurnToTarget() {
-        if (currentTarget == null) {
-            return;
-        }
-        Quaternion targetRotation = Quaternion.LookRotation(currentTarget.transform.position - transform.position);
-        float str = Mathf.Min(characterStats.speed * Time.deltaTime, 1);
-        transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, str);
     }
 }
