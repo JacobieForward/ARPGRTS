@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterStats : MonoBehaviour {
+public class Stats : MonoBehaviour {
+    public List<string> abilities;
+
     public float maxHealth;
     public float currentHealth;
     public float attackPower;

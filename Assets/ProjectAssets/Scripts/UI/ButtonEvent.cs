@@ -9,9 +9,16 @@ using UnityEngine.UI;
  */
 [RequireComponent(typeof(Button))]
 public class ButtonEvent : MonoBehaviour {
+    public enum ButtonType {
+        Ability,
+        Menu
+    }
+    public ButtonType buttonType = ButtonType.Ability;
+
     ButtonManager buttonManager;
     Button button;
     string buttonAction;
+    Combat playerCombat;
 
     void Awake() {
         button = GetComponent<Button>();
@@ -19,6 +26,8 @@ public class ButtonEvent : MonoBehaviour {
                                                             // Could always just move that to this button, or simply set the string in the script in the editor
         SetButtonManagerAndCheckForIssues();
         button.onClick.AddListener(CallActionForButtonInManager);
+
+        playerCombat = GameObject.Find("Player").GetComponent<Combat>();
     }
 
     void SetButtonManagerAndCheckForIssues() {
@@ -33,6 +42,15 @@ public class ButtonEvent : MonoBehaviour {
     }
 
     void CallActionForButtonInManager() {
-        buttonManager.DoActionForButton(buttonAction);
+        // If ability button type make current ability for player
+        // Do this by enumerating through all abilities for the player and match the string based on the ability name and button name
+        if (buttonType == ButtonType.Ability) {
+            playerCombat.ActivateAbility(buttonAction);
+        }
+
+        // If ability is a menu type do something else, maybe just have a switch here for all menu types
+        if (buttonType == ButtonType.Menu) {
+            buttonManager.DoActionForButton(buttonAction);
+        }
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- Int list for Types
+		0 = Damaging
+		1 = Healing -->
+<AbilityList>
+	<Abilities>
+		<Ability name="Smash" type="0" cooldown="7" power="2" range="3"/>
+	</Abilities>
+</AbilityList>

@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(CharacterStats))]
-[RequireComponent(typeof(CharacterCombat))]
-[RequireComponent(typeof(CharacterMovement))]
+[RequireComponent(typeof(Stats))]
+[RequireComponent(typeof(Combat))]
+[RequireComponent(typeof(Movement))]
 public class PlayerInput : MonoBehaviour {
-    CharacterStats characterStats;
-    CharacterCombat characterCombat;
-    CharacterMovement characterMovement;
+    Stats stats;
+    Combat combat;
+    Movement movement;
 
     public Material outlineMaterial;
     public LayerMask whatCanBeClickedOn;
 
     void Awake() {
-        characterStats = GetComponent<CharacterStats>();
-        characterCombat = GetComponent<CharacterCombat>();
-        characterMovement = GetComponent<CharacterMovement>();
+        stats = GetComponent<Stats>();
+        combat = GetComponent<Combat>();
+        movement = GetComponent<Movement>();
     }
 
     void Update() {
@@ -34,7 +34,7 @@ public class PlayerInput : MonoBehaviour {
             if (Physics.Raycast(ray, out hitInfo, 100)) {
                 if (hitInfo.collider.gameObject.tag.Equals("Enemy")) {
                     SelectTarget(hitInfo.collider.gameObject);
-                    characterCombat.Attack();
+                    combat.BasicAttack();
                 }
             }
         }
@@ -50,8 +50,8 @@ public class PlayerInput : MonoBehaviour {
             if (Physics.Raycast(ray, out hitInfo, 100, whatCanBeClickedOn)) {
                 // Check if mouse is over a UI object, if so ignore input commands
                 if (!EventSystem.current.IsPointerOverGameObject()) {
-                    characterCombat.approachingTarget = false;
-                    characterMovement.MoveToPosition(hitInfo.point);
+                    combat.approachingTarget = false;
+                    movement.MoveToPosition(hitInfo.point);
                 }
             }
         }
@@ -59,11 +59,11 @@ public class PlayerInput : MonoBehaviour {
 
     void SelectTarget(GameObject selectedObject) {
         selectedObject.GetComponent<Outliner>().AddOutline();
-        characterCombat.currentTarget = selectedObject;
+        combat.currentTarget = selectedObject;
     }
-
+    
     void DeSelectTarget() {
-        characterCombat.currentTarget.GetComponent<Outliner>().RemoveOutline();
-        characterCombat.currentTarget = null;
+        combat.currentTarget.GetComponent<Outliner>().RemoveOutline();
+        combat.currentTarget = null;
     }
 }

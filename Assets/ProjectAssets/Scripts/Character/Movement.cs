@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-[RequireComponent(typeof(CharacterStats))]
+[RequireComponent(typeof(Stats))]
 [RequireComponent(typeof(NavMeshAgent))]
-public class CharacterMovement : MonoBehaviour {
-    CharacterStats characterStats;
+public class Movement : MonoBehaviour {
+    Stats stats;
     NavMeshAgent navMeshAgent;
 
     void Awake() {
-        characterStats = GetComponent<CharacterStats>();
+        stats = GetComponent<Stats>();
         navMeshAgent = GetComponent<NavMeshAgent>();
-        navMeshAgent.speed = characterStats.speed;
+        navMeshAgent.speed = stats.speed;
     }
 
     public void MoveToPosition(Vector3 positionToMoveTo) {
@@ -34,7 +34,7 @@ public class CharacterMovement : MonoBehaviour {
             return;
         }
         Quaternion targetRotation = Quaternion.LookRotation(positionToTurnTo - gameObject.transform.position);
-        float str = Mathf.Min(characterStats.speed * Time.deltaTime, 1);
+        float str = Mathf.Min(stats.speed * Time.deltaTime, 1);
         transform.rotation = Quaternion.Lerp(gameObject.transform.rotation, targetRotation, str);
     }
 }
