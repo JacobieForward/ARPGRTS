@@ -25,7 +25,7 @@ public class ButtonEvent : MonoBehaviour {
         buttonAction = GetComponentInChildren<Text>().text; // Cannot have more than one text component in childed objects, but that shouldn't be a problem
                                                             // Could always just move that to this button, or simply set the string in the script in the editor
         SetButtonManagerAndCheckForIssues();
-        button.onClick.AddListener(CallActionForButtonInManager);
+        button.onClick.AddListener(CallActionForButton);
 
         playerCombat = GameObject.Find("Player").GetComponent<Combat>();
     }
@@ -41,7 +41,7 @@ public class ButtonEvent : MonoBehaviour {
         }
     }
 
-    void CallActionForButtonInManager() {
+    void CallActionForButton() {
         // If ability button type make current ability for player
         // Do this by enumerating through all abilities for the player and match the string based on the ability name and button name
         if (buttonType == ButtonType.Ability) {

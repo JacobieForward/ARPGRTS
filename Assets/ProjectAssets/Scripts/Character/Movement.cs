@@ -8,11 +8,27 @@ using UnityEngine.AI;
 public class Movement : MonoBehaviour {
     Stats stats;
     NavMeshAgent navMeshAgent;
+    Animator animator;
 
     void Awake() {
         stats = GetComponent<Stats>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.speed = stats.speed;
+        animator = GetComponent<Animator>();
+    }
+
+    void Update() {
+        CheckForNoMovement();
+    }
+
+    void CheckForNoMovement() {
+        if (!navMeshAgent.pathPending) {
+            if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance) {
+                if (!navMeshAgent.hasPath || navMeshAgent.velocity.sqrMagnitude == 0f) {
+                    animator.SetBool("moving", false);
+                }
+            }
+        }
     }
 
     public void MoveToPosition(Vector3 positionToMoveTo) {
@@ -21,11 +37,13 @@ public class Movement : MonoBehaviour {
             return;
         }
         navMeshAgent.SetDestination(positionToMoveTo);
+        animator.SetBool("moving", true);
     }
 
     public void StopMovement() {
         navMeshAgent.velocity = Vector3.zero;
         navMeshAgent.SetDestination(gameObject.transform.position); // Setting destination to current position stops movement immediately
+        animator.SetBool("moving", false);
     }
 
     public void TurnToPosition(Vector3 positionToTurnTo) {

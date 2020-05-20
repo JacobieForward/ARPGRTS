@@ -10,6 +10,7 @@ public class Combat : MonoBehaviour {
     public float abilityOneTimer;
     public float abilityTwoTimer;
 
+    Animator animator;
     Stats stats;
     Movement movement;
 
@@ -27,6 +28,8 @@ public class Combat : MonoBehaviour {
 
         attackTimer = stats.attackSpeed;
         approachingTarget = false;
+        animator = GetComponent<Animator>();
+
 
         abilitiesLoader = FindObjectsOfType<AbilitiesLoader>()[0];
     }
@@ -66,6 +69,7 @@ public class Combat : MonoBehaviour {
         if (WithinAttackRangeOfTarget(stats.attackRange) && FacingTarget()) {
             approachingTarget = false;
             if (attackTimer >= stats.attackSpeed) {
+                animator.SetTrigger("attacking");
                 DealDamageToTarget(1.0f);
                 attackTimer = 0.0f;
             }
