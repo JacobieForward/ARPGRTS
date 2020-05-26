@@ -24,7 +24,7 @@ public class ButtonEvent : MonoBehaviour {
         button = GetComponent<Button>();
         buttonAction = GetComponentInChildren<Text>().text; // Cannot have more than one text component in childed objects, but that shouldn't be a problem
                                                             // Could always just move that to this button, or simply set the string in the script in the editor
-        SetButtonManagerAndCheckForIssues();
+        //SetButtonManagerAndCheckForIssues();
         button.onClick.AddListener(CallActionForButton);
 
         playerCombat = GameObject.Find("Player").GetComponent<Combat>();
@@ -50,7 +50,7 @@ public class ButtonEvent : MonoBehaviour {
 
         // If ability is a menu type do something else, maybe just have a switch here for all menu types
         if (buttonType == ButtonType.Menu) {
-            buttonManager.DoActionForButton(buttonAction);
+            //buttonManager.DoActionForButton(buttonAction);
         }
     }
 }
