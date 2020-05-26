@@ -5,6 +5,7 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(Stats))]
 [RequireComponent(typeof(Movement))]
+// TODO: Try to use inheritance for all the various scripts that use this
 public class Combat : MonoBehaviour {
     // TODO: Better system for timers
     public float abilityOneTimer;

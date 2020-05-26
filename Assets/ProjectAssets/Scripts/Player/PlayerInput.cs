@@ -36,6 +36,9 @@ public class PlayerInput : MonoBehaviour {
                     SelectTarget(hitInfo.collider.gameObject);
                     combat.BasicAttack();
                 }
+                if (hitInfo.collider.gameObject.tag.Equals("Ally")) {
+                    SelectTarget(hitInfo.collider.gameObject);
+                }
             }
         }
     }
@@ -58,6 +61,9 @@ public class PlayerInput : MonoBehaviour {
     }
 
     void SelectTarget(GameObject selectedObject) {
+        if (combat.currentTarget != null) {
+            DeSelectTarget();
+        }
         selectedObject.GetComponent<Outliner>().AddOutline();
         combat.currentTarget = selectedObject;
     }
