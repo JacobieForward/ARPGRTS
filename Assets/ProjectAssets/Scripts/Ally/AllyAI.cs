@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Combat))]
+[RequireComponent(typeof(Movement))]
 [RequireComponent(typeof(Stats))]
 public class AllyAI : MonoBehaviour {
     Combat combat;
+    Movement movement;
     Stats stats;
     //TODO: Some sort of state machine in the combat script. Possibly in to the future to tie in to another script for a group of enemies to have intelligence and make tactical decisions.
 
@@ -21,6 +23,9 @@ public class AllyAI : MonoBehaviour {
             SearchForTarget();
         } else if (combat.approachingTarget == false) {
             combat.BasicAttack();
+        } else {
+            // Follow the player
+            FollowPlayer();
         }
     }
 
@@ -32,5 +37,10 @@ public class AllyAI : MonoBehaviour {
                 combat.BasicAttack();
             }
         }
+    }
+
+    void FollowPlayer() {
+        // If outside of attack distance from player
+        // Then move and turn to player
     }
 }
