@@ -5,16 +5,17 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(Stats))]
 [RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(AnimationController))]
 public class Movement : MonoBehaviour {
     Stats stats;
     NavMeshAgent navMeshAgent;
-    Animator animator;
+    AnimationController animationController;
 
     void Awake() {
         stats = GetComponent<Stats>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.speed = stats.speed;
-        animator = GetComponent<Animator>();
+        animationController = GetComponent<AnimationController>();
     }
 
     void Update() {
@@ -25,7 +26,7 @@ public class Movement : MonoBehaviour {
         if (!navMeshAgent.pathPending) {
             if (navMeshAgent.remainingDistance <= navMeshAgent.stoppingDistance) {
                 if (!navMeshAgent.hasPath || navMeshAgent.velocity.sqrMagnitude == 0f) {
-                    animator.SetBool("moving", false);
+                    animationController.GetAnimator().SetBool("moving", false);
                 }
             }
         }
@@ -36,14 +37,25 @@ public class Movement : MonoBehaviour {
             Debug.Log("Tried to move to null target.");
             return;
         }
-        navMeshAgent.SetDestination(positionToMoveTo);
-        animator.SetBool("moving", true);
+        navMeshAgent.destination = positionToMoveTo;
+        navMeshAgent.speed = stats.speed * Mathf.Clamp01(1f);
+        navMeshAgent.isStopped = false;
+        animationController.GetAnimator().SetBool("moving", true);
+    }
+
+    public bool CanMoveTo(Vector3 destination) {
+        NavMeshPath path = new NavMeshPath();
+        bool hasPath = NavMesh.CalculatePath(transform.position, destination, NavMesh.AllAreas, path);
+        if (!hasPath) return false;
+        if (path.status != NavMeshPathStatus.PathComplete) return false;
+
+        return true;
     }
 
     public void StopMovement() {
         navMeshAgent.velocity = Vector3.zero;
         navMeshAgent.SetDestination(gameObject.transform.position); // Setting destination to current position stops movement immediately
-        animator.SetBool("moving", false);
+        animationController.GetAnimator().SetBool("moving", false);
     }
 
     public void TurnToPosition(Vector3 positionToTurnTo) {

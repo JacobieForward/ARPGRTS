@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿#pragma warning disable 0649
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class Ability : ScriptableObject {
     [SerializeField] float power; // Power applies for damage/healing/any other effects (i.e. shielding, buffs)
     [SerializeField] float range;
     [SerializeField] Sprite icon;
-    [SerializeField] AnimationClip animation;
+    [SerializeField] AnimationClip animationClip;
 
     public AbilityType type;
 
@@ -37,5 +38,9 @@ public class Ability : ScriptableObject {
 
     public Sprite GetIcon() {
         return icon;
+    }
+
+    public AnimationClip GetAnimationClip() {
+        return animationClip;
     }
 }

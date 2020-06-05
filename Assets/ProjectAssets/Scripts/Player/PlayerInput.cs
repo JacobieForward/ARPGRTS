@@ -14,15 +14,21 @@ public class PlayerInput : MonoBehaviour {
     public Material outlineMaterial;
     public LayerMask whatCanBeClickedOn;
 
+    bool isMoving;
+
     void Awake() {
         stats = GetComponent<Stats>();
         combat = GetComponent<Combat>();
         movement = GetComponent<Movement>();
+        isMoving = false;
     }
 
     void Update() {
         CheckForMouseInput();
         MouseInputForMovement();
+        if (Input.GetMouseButtonUp(0)) {
+            isMoving = false;
+        }
     }
 
     void CheckForMouseInput() {
@@ -44,20 +50,28 @@ public class PlayerInput : MonoBehaviour {
     }
 
     void MouseInputForMovement() {
-        // 0 value passed to Input.GetMouseButtonDown is right mouse button
-        if (Input.GetMouseButtonDown(0)) {
-            // Draw Ray from camera to mouse position
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hitInfo;
-            // Use the ray to raycast and set the destination to the mouse point
-            if (Physics.Raycast(ray, out hitInfo, 100, whatCanBeClickedOn)) {
-                // Check if mouse is over a UI object, if so ignore input commands
-                if (!EventSystem.current.IsPointerOverGameObject()) {
-                    combat.approachingTarget = false;
-                    movement.MoveToPosition(hitInfo.point);
-                }
+        Vector3 mousehitPosition;
+
+        if (IsRaycastToNavmeshSuccessful(out mousehitPosition)) {
+            if (Input.GetMouseButtonDown(0)) {
+                combat.approachingTarget = false;
+                isMoving = true;
+            }
+
+            if (Input.GetMouseButton(0) && isMoving) {
+                combat.approachingTarget = false;
+                movement.MoveToPosition(mousehitPosition);
             }
         }
+    }
+
+    bool IsRaycastToNavmeshSuccessful(out Vector3 raycastPosition) {
+        raycastPosition = new Vector3();
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hitInfo;
+        bool isCastSuccessful = Physics.Raycast(ray, out hitInfo, 100, whatCanBeClickedOn);
+        raycastPosition = hitInfo.point;
+        return isCastSuccessful && !EventSystem.current.IsPointerOverGameObject();
     }
 
     void SelectTarget(GameObject selectedObject) {

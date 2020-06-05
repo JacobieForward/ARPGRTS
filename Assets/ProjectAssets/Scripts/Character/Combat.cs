@@ -5,15 +5,12 @@ using UnityEngine.AI;
 
 [RequireComponent(typeof(Stats))]
 [RequireComponent(typeof(Movement))]
-// TODO: Try to use inheritance for all the various scripts that use this
+[RequireComponent(typeof(AnimationController))]
+// TODO: Use inheritance for all the various scripts that use this
 public class Combat : MonoBehaviour {
-    // TODO: Better system for timers
-    public float abilityOneTimer;
-    public float abilityTwoTimer;
-
-    Animator animator;
     Stats stats;
     Movement movement;
+    AnimationController animationController;
 
     float attackTimer;
 
@@ -27,10 +24,10 @@ public class Combat : MonoBehaviour {
     void Awake() {
         stats = GetComponent<Stats>();
         movement = GetComponent<Movement>();
+        animationController = GetComponent<AnimationController>();
 
         attackTimer = stats.attackSpeed;
         approachingTarget = false;
-        animator = GetComponent<Animator>();
 
         InitializeAbilityLists();
     }
@@ -69,8 +66,6 @@ public class Combat : MonoBehaviour {
             abilityCooldownTimers[i] += Time.deltaTime;
         }
         attackTimer += Time.deltaTime;
-        abilityOneTimer += Time.deltaTime;
-        abilityTwoTimer += Time.deltaTime;
     }
 
     void Die() {
@@ -86,7 +81,7 @@ public class Combat : MonoBehaviour {
         if (WithinAttackRangeOfTarget(stats.attackRange) && FacingTarget()) {
             approachingTarget = false;
             if (IsAttackCooldownComplete()) {
-                animator.SetTrigger("attacking");
+                animationController.GetAnimator().SetTrigger("attacking");
                 DealDamageToTarget(1.0f);
                 attackTimer = 0.0f;
             }
@@ -97,9 +92,7 @@ public class Combat : MonoBehaviour {
 
     bool WithinAttackRangeOfTarget(float attackRange) {
         float distance = Vector3.Distance(transform.position, currentTarget.transform.position);
-
-        if (distance <= attackRange)
-        {
+        if (distance <= attackRange) {
             return true;
         }
         return false;
@@ -133,6 +126,8 @@ public class Combat : MonoBehaviour {
             // Check attack range
             if (WithinAttackRangeOfTarget(ability.GetRange()) && FacingTarget()) {
                 if (IsAbilityCooldownComplete(ability) && IsAttackCooldownComplete()) {
+                    animationController.ChangeAbilityAnimation(ability);
+                    animationController.GetAnimator().SetTrigger("usingAbility");
                     DealDamageToTarget(ability.GetPower());
                     attackTimer = 0.0f;
                     ResetAbilityCooldown(ability);

@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: Smash
   m_EditorClassIdentifier: 
   name: Smash
-  cooldown: 10
+  cooldown: 5
   power: 2
   range: 2
   icon: {fileID: 21300000, guid: a3a38242cc88a1c4cbcbe2800d77fa69, type: 3}
-  animation: {fileID: 7400000, guid: 17ef2fa56af975c42b90ebd3648d3324, type: 3}
+  animationClip: {fileID: 7400000, guid: 9b773834d592b8c46b8aa1451bc5f2c6, type: 3}
   type: 0
