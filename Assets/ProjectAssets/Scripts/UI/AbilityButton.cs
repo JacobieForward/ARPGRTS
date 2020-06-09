@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
+#pragma warning disable CS0649
 public class AbilityButton : MonoBehaviour {
     Button button;
     Combat playerCombat;

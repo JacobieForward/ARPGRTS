@@ -26,9 +26,7 @@ public class PlayerInput : MonoBehaviour {
     void Update() {
         CheckForMouseInput();
         MouseInputForMovement();
-        if (Input.GetMouseButtonUp(0)) {
-            isMoving = false;
-        }
+        CheckForAbilityInput();
     }
 
     void CheckForMouseInput() {
@@ -46,6 +44,9 @@ public class PlayerInput : MonoBehaviour {
                     SelectTarget(hitInfo.collider.gameObject);
                 }
             }
+        }
+        if (Input.GetMouseButtonUp(0)) {
+            isMoving = false;
         }
     }
 
@@ -72,6 +73,20 @@ public class PlayerInput : MonoBehaviour {
         bool isCastSuccessful = Physics.Raycast(ray, out hitInfo, 100, whatCanBeClickedOn);
         raycastPosition = hitInfo.point;
         return isCastSuccessful && !EventSystem.current.IsPointerOverGameObject();
+    }
+
+    void CheckForAbilityInput() {
+        if (Input.GetKeyDown(KeyCode.Alpha1)) {
+            combat.ActivateAbilityByAbilityNumber(0);
+        } else if (Input.GetKeyDown(KeyCode.Alpha2)) {
+            combat.ActivateAbilityByAbilityNumber(1);
+        } else if (Input.GetKeyDown(KeyCode.Alpha3)) {
+            combat.ActivateAbilityByAbilityNumber(2);
+        } else if (Input.GetKeyDown(KeyCode.Alpha4)) {
+            combat.ActivateAbilityByAbilityNumber(3);
+        } else if (Input.GetKeyDown(KeyCode.Alpha5)) {
+            combat.ActivateAbilityByAbilityNumber(4);
+        }
     }
 
     void SelectTarget(GameObject selectedObject) {

@@ -4722,7 +4722,6 @@ GameObject:
   - component: {fileID: 1029071454}
   - component: {fileID: 1029071453}
   - component: {fileID: 1029071452}
-  - component: {fileID: 1029071461}
   - component: {fileID: 1029071462}
   m_Layer: 0
   m_Name: Ally (1)
@@ -4877,21 +4876,6 @@ Transform:
   m_Father: {fileID: 379405048}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: -365.406, z: 0}
---- !u!111 &1029071461
-Animation:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1029071451}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
 --- !u!114 &1029071462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9315,7 +9299,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 1117993521, guid: c5e95db023ef1ad458d5b7e432cfb190, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: c5e95db023ef1ad458d5b7e432cfb190, type: 3}
 --- !u!1001 &3369763457767126672
 PrefabInstance:
@@ -9384,7 +9369,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 469698758, guid: d338a07b619eda745a73dac43f0e82e6, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d338a07b619eda745a73dac43f0e82e6, type: 3}
 --- !u!1 &3369763458078468463 stripped
 GameObject:
@@ -9477,5 +9463,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 7228191791661022113, guid: 61ff7946694203c4e99af6945d9346b1, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 61ff7946694203c4e99af6945d9346b1, type: 3}

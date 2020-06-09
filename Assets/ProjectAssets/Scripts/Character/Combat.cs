@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using System;
 
 [RequireComponent(typeof(Stats))]
 [RequireComponent(typeof(Movement))]
 [RequireComponent(typeof(AnimationController))]
+#pragma warning disable CS0649
 // TODO: Use inheritance for all the various scripts that use this
 public class Combat : MonoBehaviour {
     Stats stats;
@@ -115,8 +117,6 @@ public class Combat : MonoBehaviour {
     }
 
     public void ActivateAbility(Ability ability) {
-        print(ability.GetName());
-
         if (currentTarget == null) {
             Debug.Log("ActivateAbility called with no target selected.");
             return;
@@ -126,7 +126,7 @@ public class Combat : MonoBehaviour {
             // Check attack range
             if (WithinAttackRangeOfTarget(ability.GetRange()) && FacingTarget()) {
                 if (IsAbilityCooldownComplete(ability) && IsAttackCooldownComplete()) {
-                    animationController.ChangeAbilityAnimation(ability);
+                    animationController.ChangeAbilityAnimation(ability.GetAnimationClip());
                     animationController.GetAnimator().SetTrigger("usingAbility");
                     DealDamageToTarget(ability.GetPower());
                     attackTimer = 0.0f;
@@ -139,10 +139,19 @@ public class Combat : MonoBehaviour {
         }
     }
 
+    public void ActivateAbilityByAbilityNumber(int abilityNumber) {
+        try {
+            ActivateAbility(abilityList[abilityNumber]);
+        } catch (ArgumentOutOfRangeException e) {
+            Debug.Log("Used Ability with slot not in Ability List of: " + gameObject.name);
+            Debug.Log(e.ToString());
+            return;
+        }
+    }
+
     bool IsAbilityCooldownComplete(Ability ability) {
         int abilityIndex = GetAbilityIndex(ability);
 
-        print(abilityCooldownTimers[abilityIndex]);
         if (abilityCooldownTimers[abilityIndex] >= ability.GetCooldown()) {
             return true;
         }
@@ -165,7 +174,6 @@ public class Combat : MonoBehaviour {
 
         if (abilityIndex == 9999) {
             throw new System.ArgumentException("GetAbilityIndex called with ability not in abilityList.", "ability");
-            return -1;
         }
         return abilityIndex;
     }

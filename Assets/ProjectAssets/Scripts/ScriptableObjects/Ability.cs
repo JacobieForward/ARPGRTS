@@ -5,7 +5,7 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = ("CustomARPGRTSObjects/Ability"))]
 public class Ability : ScriptableObject {
-    [SerializeField] string name;
+    [SerializeField] string abilityName;
     [SerializeField] float cooldown;
     [SerializeField] float power; // Power applies for damage/healing/any other effects (i.e. shielding, buffs)
     [SerializeField] float range;
@@ -20,8 +20,8 @@ public class Ability : ScriptableObject {
         Shielding
     }
 
-    public string GetName() {
-        return name;
+    public string GetAbilityName() {
+        return abilityName;
     }
 
     public float GetCooldown() {

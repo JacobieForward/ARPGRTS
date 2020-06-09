@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+#pragma warning disable CS0108
 public class Outliner : MonoBehaviour {
-    public Renderer renderer; // TODO: Figure out a way to set this at runtime rather than in the editor, also get rid of the annoying warning
+    public Renderer renderer;
     public Material outlineMaterial;
 
     public void AddOutline() {
