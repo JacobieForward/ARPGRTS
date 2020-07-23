@@ -9,23 +9,26 @@ public class AllyAI : MonoBehaviour {
     Combat combat;
     Movement movement;
     Stats stats;
+    Transform playerTransform;
     //TODO: Some sort of state machine in the combat script. Possibly in to the future to tie in to another script for a group of enemies to have intelligence and make tactical decisions.
 
     public float searchRadius;
+    public float maximumFollowDistance;
 
     void Awake() {
         combat = GetComponent<Combat>();
+        movement = GetComponent<Movement>();
         stats = GetComponent<Stats>();
+
+        playerTransform = GameObject.Find("Player").GetComponent<Transform>();
     }
 
     void Update() {
         if (combat.currentTarget == null) {
             SearchForTarget();
+            FollowPlayer();
         } else if (combat.approachingTarget == false) {
             combat.BasicAttack();
-        } else {
-            // Follow the player
-            FollowPlayer();
         }
     }
 
@@ -41,6 +44,12 @@ public class AllyAI : MonoBehaviour {
 
     void FollowPlayer() {
         // If outside of attack distance from player
-        // Then move and turn to player
+        if (!movement.WithinFollowRangeOfTarget(maximumFollowDistance, playerTransform.position)) {
+            // Then move and turn to player
+            movement.MoveToPosition(playerTransform.position);
+            movement.TurnToPosition(playerTransform.position);
+        } else {
+            movement.StopMovement();
+        }
     }
 }

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 #pragma warning disable CS0649
 public class AbilityButton : MonoBehaviour {
     Button button;
-    Combat playerCombat;
+    AbilitySystem playerAbilitySystem;
 
     [SerializeField] Ability ability;
 
@@ -16,12 +16,12 @@ public class AbilityButton : MonoBehaviour {
         
         button.onClick.AddListener(CallButtonAbility);
 
-        playerCombat = GameObject.Find("Player").GetComponent<Combat>();
+        playerAbilitySystem = GameObject.Find("Player").GetComponent<AbilitySystem>();
         AddAbility();
     }
 
     void CallButtonAbility() {
-        playerCombat.ActivateAbility(ability);
+        playerAbilitySystem.ActivateAbility(ability);
     }
 
     void AddAbility() {

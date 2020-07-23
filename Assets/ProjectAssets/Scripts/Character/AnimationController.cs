@@ -16,11 +16,16 @@ public class AnimationController : MonoBehaviour {
         animatorOverrideController.runtimeAnimatorController = animator.runtimeAnimatorController;
     }
 
+    void AbilityActivated(Ability ability) {
+        ChangeAbilityAnimation(ability.GetAnimationClip());
+        animator.SetTrigger("usingAbility");
+    }
+
     public Animator GetAnimator() {
         return animator;
     }
 
-    public void ChangeAbilityAnimation(AnimationClip abilityAnimationClip) {
+    void ChangeAbilityAnimation(AnimationClip abilityAnimationClip) {
         animatorOverrideController["ShieldWarrior@BlockHit01"] = abilityAnimationClip;
         animator.runtimeAnimatorController = animatorOverrideController;
     }

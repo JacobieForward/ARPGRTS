@@ -6,10 +6,12 @@ using UnityEngine.EventSystems;
 [RequireComponent(typeof(Stats))]
 [RequireComponent(typeof(Combat))]
 [RequireComponent(typeof(Movement))]
+[RequireComponent(typeof(AbilitySystem))]
 public class PlayerInput : MonoBehaviour {
     Stats stats;
     Combat combat;
     Movement movement;
+    AbilitySystem abilitySystem;
 
     public Material outlineMaterial;
     public LayerMask whatCanBeClickedOn;
@@ -20,40 +22,52 @@ public class PlayerInput : MonoBehaviour {
         stats = GetComponent<Stats>();
         combat = GetComponent<Combat>();
         movement = GetComponent<Movement>();
+        abilitySystem = GetComponent<AbilitySystem>();
         isMoving = false;
     }
 
     void Update() {
-        CheckForMouseInput();
-        MouseInputForMovement();
+        // TODO: Both mouse input methods and the raycast methods associated with each of them seriously need refactoring
+        if (!CheckMouseInputForCombat()) {
+            MouseInputForMovement();
+        }
         CheckForAbilityInput();
     }
 
-    void CheckForMouseInput() {
-        if (Input.GetMouseButtonDown(1)) {
-            // Draw Ray from camera to mouse position
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hitInfo;
-            // Use the ray to raycast and set the destination to the mouse point
-            if (Physics.Raycast(ray, out hitInfo, 100)) {
-                if (hitInfo.collider.gameObject.tag.Equals("Enemy")) {
-                    SelectTarget(hitInfo.collider.gameObject);
-                    combat.BasicAttack();
+    bool CheckMouseInputForCombat() {
+        RaycastHit hit;
+        if (IsRaycastToGameobjectSuccessful(out hit)) {
+            if (Input.GetMouseButtonDown(0)) {
+                if (hit.collider.gameObject.tag.Equals("Enemy")) {
+                    SelectTarget(hit.collider.gameObject);
+                    return true;
                 }
-                if (hitInfo.collider.gameObject.tag.Equals("Ally")) {
-                    SelectTarget(hitInfo.collider.gameObject);
+                if (hit.collider.gameObject.tag.Equals("Ally")) {
+                    SelectTarget(hit.collider.gameObject);
+                    return true;
+                }
+            }
+
+            if (Input.GetMouseButtonDown(1)) {
+                if (hit.collider.gameObject.tag.Equals("Enemy")) {
+                    SelectTarget(hit.collider.gameObject);
+                    combat.BasicAttack();
+                    return true;
+                }
+                if (hit.collider.gameObject.tag.Equals("Ally")) {
+                    SelectTarget(hit.collider.gameObject);
+                    return true;
                 }
             }
         }
-        if (Input.GetMouseButtonUp(0)) {
-            isMoving = false;
-        }
+        return false;
     }
 
     void MouseInputForMovement() {
         Vector3 mousehitPosition;
-
-        if (IsRaycastToNavmeshSuccessful(out mousehitPosition)) {
+        RaycastHit hitInfo;
+        // TODO: Make the Raycast only happen if the mouse button is used
+        if (IsRaycastToGroundSuccessful(out mousehitPosition)) {
             if (Input.GetMouseButtonDown(0)) {
                 combat.approachingTarget = false;
                 isMoving = true;
@@ -64,28 +78,38 @@ public class PlayerInput : MonoBehaviour {
                 movement.MoveToPosition(mousehitPosition);
             }
         }
+        if (Input.GetMouseButtonUp(0)) {
+            isMoving = false;
+        }
     }
 
-    bool IsRaycastToNavmeshSuccessful(out Vector3 raycastPosition) {
+    bool IsRaycastToGroundSuccessful(out Vector3 raycastPosition) {
         raycastPosition = new Vector3();
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitInfo;
         bool isCastSuccessful = Physics.Raycast(ray, out hitInfo, 100, whatCanBeClickedOn);
         raycastPosition = hitInfo.point;
-        return isCastSuccessful && !EventSystem.current.IsPointerOverGameObject();
+        return isCastSuccessful && !EventSystem.current.IsPointerOverGameObject(); // Note EventSystem.current.IsPointerOverGameObject() only applies for UI gameObjects
+    }
+
+    bool IsRaycastToGameobjectSuccessful(out RaycastHit hitInfo) {
+        //hit = new RaycastHit();
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        bool isCastSuccessful = Physics.Raycast(ray, out hitInfo, 100);
+        return isCastSuccessful && !EventSystem.current.IsPointerOverGameObject(); // Note EventSystem.current.IsPointerOverGameObject() only applies for UI gameObjects
     }
 
     void CheckForAbilityInput() {
         if (Input.GetKeyDown(KeyCode.Alpha1)) {
-            combat.ActivateAbilityByAbilityNumber(0);
+            abilitySystem.ActivateAbilityByAbilityNumber(0);
         } else if (Input.GetKeyDown(KeyCode.Alpha2)) {
-            combat.ActivateAbilityByAbilityNumber(1);
+            abilitySystem.ActivateAbilityByAbilityNumber(1);
         } else if (Input.GetKeyDown(KeyCode.Alpha3)) {
-            combat.ActivateAbilityByAbilityNumber(2);
+            abilitySystem.ActivateAbilityByAbilityNumber(2);
         } else if (Input.GetKeyDown(KeyCode.Alpha4)) {
-            combat.ActivateAbilityByAbilityNumber(3);
+            abilitySystem.ActivateAbilityByAbilityNumber(3);
         } else if (Input.GetKeyDown(KeyCode.Alpha5)) {
-            combat.ActivateAbilityByAbilityNumber(4);
+            abilitySystem.ActivateAbilityByAbilityNumber(4);
         }
     }
 

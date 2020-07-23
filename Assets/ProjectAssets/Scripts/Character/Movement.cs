@@ -11,6 +11,8 @@ public class Movement : MonoBehaviour {
     NavMeshAgent navMeshAgent;
     AnimationController animationController;
 
+    float minFollowDistance = 2.0f; // TODO: Put in Constants
+
     void Awake() {
         stats = GetComponent<Stats>();
         navMeshAgent = GetComponent<NavMeshAgent>();
@@ -66,5 +68,13 @@ public class Movement : MonoBehaviour {
         Quaternion targetRotation = Quaternion.LookRotation(positionToTurnTo - gameObject.transform.position);
         float str = Mathf.Min(stats.speed * Time.deltaTime, 1);
         transform.rotation = Quaternion.Lerp(gameObject.transform.rotation, targetRotation, str);
+    }
+
+    public bool WithinFollowRangeOfTarget(float followRange, Vector3 followTargetPosition) {
+        float distance = Vector3.Distance(transform.position, followTargetPosition);
+        if (distance <= followRange) {
+            return true;
+        }
+        return false;
     }
 }

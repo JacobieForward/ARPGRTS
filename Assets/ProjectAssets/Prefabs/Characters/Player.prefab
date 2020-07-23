@@ -1833,6 +1833,7 @@ GameObject:
   - component: {fileID: 1260420562542778708}
   - component: {fileID: 1260420562542778711}
   - component: {fileID: 1117993521}
+  - component: {fileID: 1117993522}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -1944,13 +1945,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4602e2360bb6d174695f6b83f8f0dc37, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilityOneTimer: 0
-  abilityTwoTimer: 0
   currentTarget: {fileID: 0}
   approachingTarget: 0
-  abilityList:
-  - {fileID: 11400000, guid: 95908cd5c4c558c41970a3633883ec7e, type: 2}
-  animation: {fileID: 0}
 --- !u!114 &1260420562542778708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1963,14 +1959,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 424292359f28ab14cb08c58c2f099cf0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  abilities:
-  - Smash
-  maxHealth: 20
-  currentHealth: 20
+  maxHealth: 10
+  currentHealth: 0
   attackPower: 2
-  attackSpeed: 2
-  attackRange: 2
-  speed: 6
+  attackSpeed: 1
+  attackRange: 1.5
+  speed: 4
 --- !u!114 &1260420562542778711
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1983,22 +1977,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ebab8e097f7f8049a7a2cef5103695e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxNavPathLength: 40
---- !u!111 &1117993521
-Animation:
+--- !u!114 &1117993521
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1260420562542682023}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Animation: {fileID: 0}
-  m_Animations: []
-  m_WrapMode: 0
-  m_PlayAutomatically: 1
-  m_AnimatePhysics: 0
-  m_CullingType: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea605b89b6093b547baf03d1bc7b6fe1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1117993522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1260420562542682023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d30373f7d9b74d348b386c7178fb43e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  abilityList:
+  - {fileID: 11400000, guid: 95908cd5c4c558c41970a3633883ec7e, type: 2}
 --- !u!1 &1260420562542682025
 GameObject:
   m_ObjectHideFlags: 0

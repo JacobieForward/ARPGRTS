@@ -2,17 +2,17 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
-using System;
 
 [RequireComponent(typeof(Stats))]
 [RequireComponent(typeof(Movement))]
 [RequireComponent(typeof(AnimationController))]
-#pragma warning disable CS0649
+[RequireComponent(typeof(AbilitySystem))]
 // TODO: Use inheritance for all the various scripts that use this
 public class Combat : MonoBehaviour {
     Stats stats;
     Movement movement;
     AnimationController animationController;
+    AbilitySystem abilitySystem;
 
     float attackTimer;
 
@@ -20,31 +20,19 @@ public class Combat : MonoBehaviour {
 
     public bool approachingTarget;
 
-    [SerializeField] List<Ability> abilityList;
-    List<float> abilityCooldownTimers = new List<float>();
-
     void Awake() {
         stats = GetComponent<Stats>();
         movement = GetComponent<Movement>();
         animationController = GetComponent<AnimationController>();
+        abilitySystem = GetComponent<AbilitySystem>();
 
         attackTimer = stats.attackSpeed;
         approachingTarget = false;
-
-        InitializeAbilityLists();
-    }
-
-    void InitializeAbilityLists() {
-        if (abilityList.Count == 0) {
-            return;
-        }
-        float newCooldown = 0.0f;
-        abilityCooldownTimers.Add(newCooldown);
     }
 
     void Update() {
         CheckForDeath();
-        UpdateTimers();
+        attackTimer += Time.deltaTime;
         if (approachingTarget) {
             // TODO: Combine moving and turning into a single method?
             movement.MoveToPosition(currentTarget.transform.position);
@@ -63,13 +51,6 @@ public class Combat : MonoBehaviour {
         }
     }
 
-    void UpdateTimers() {
-        for (int i = 0; i < abilityCooldownTimers.Count; i++) {
-            abilityCooldownTimers[i] += Time.deltaTime;
-        }
-        attackTimer += Time.deltaTime;
-    }
-
     void Die() {
         Destroy(gameObject);
     }
@@ -85,10 +66,24 @@ public class Combat : MonoBehaviour {
             if (IsAttackCooldownComplete()) {
                 animationController.GetAnimator().SetTrigger("attacking");
                 DealDamageToTarget(1.0f);
-                attackTimer = 0.0f;
+                ResetAttackCooldown();
             }
         } else {
             approachingTarget = true;
+        }
+    }
+    
+    void AbilityActivated(Ability ability) {
+        // If Damaging Ability
+        if (ability.type == Ability.AbilityType.Damaging) {
+            // Check attack range
+            if (WithinAttackRangeOfTarget(ability.GetRange()) && FacingTarget()) {
+                DealDamageToTarget(ability.GetPower());
+                ResetAttackCooldown();
+            }
+            // Else if Healing Ability
+        } else if (ability.type == Ability.AbilityType.Healing) {
+
         }
     }
 
@@ -116,69 +111,11 @@ public class Combat : MonoBehaviour {
         return false;
     }
 
-    public void ActivateAbility(Ability ability) {
-        if (currentTarget == null) {
-            Debug.Log("ActivateAbility called with no target selected.");
-            return;
-        }
-        // If Damaging Ability
-        if (ability.type == Ability.AbilityType.Damaging) {
-            // Check attack range
-            if (WithinAttackRangeOfTarget(ability.GetRange()) && FacingTarget()) {
-                if (IsAbilityCooldownComplete(ability) && IsAttackCooldownComplete()) {
-                    animationController.ChangeAbilityAnimation(ability.GetAnimationClip());
-                    animationController.GetAnimator().SetTrigger("usingAbility");
-                    DealDamageToTarget(ability.GetPower());
-                    attackTimer = 0.0f;
-                    ResetAbilityCooldown(ability);
-                }
-            }
-        // Else if Healing Ability
-        } else if (ability.type == Ability.AbilityType.Healing) {
-
-        }
-    }
-
-    public void ActivateAbilityByAbilityNumber(int abilityNumber) {
-        try {
-            ActivateAbility(abilityList[abilityNumber]);
-        } catch (ArgumentOutOfRangeException e) {
-            Debug.Log("Used Ability with slot not in Ability List of: " + gameObject.name);
-            Debug.Log(e.ToString());
-            return;
-        }
-    }
-
-    bool IsAbilityCooldownComplete(Ability ability) {
-        int abilityIndex = GetAbilityIndex(ability);
-
-        if (abilityCooldownTimers[abilityIndex] >= ability.GetCooldown()) {
-            return true;
-        }
-        return false;
-    }
-
-    void ResetAbilityCooldown(Ability ability) {
-        int abilityIndex = GetAbilityIndex(ability);
-
-        abilityCooldownTimers[abilityIndex] = 0.0f;
-    }
-
-    int GetAbilityIndex(Ability ability) {
-        int abilityIndex = 9999;
-        for (int i = 0; i < abilityList.Count; i++) {
-            if (abilityList[i].Equals(ability)) {
-                abilityIndex = i;
-            }
-        }
-
-        if (abilityIndex == 9999) {
-            throw new System.ArgumentException("GetAbilityIndex called with ability not in abilityList.", "ability");
-        }
-        return abilityIndex;
-    }
-
-    bool IsAttackCooldownComplete() {
+    public bool IsAttackCooldownComplete() {
         return attackTimer >= stats.attackSpeed;
+    }
+
+    public void ResetAttackCooldown() {
+        attackTimer = 0.0f;
     }
 }
